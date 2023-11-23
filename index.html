@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercícios</title>
+    <style>
+        *{
+            text-align: center;
+            box-sizing: border-box;
+            background-color: rgb(0,255,255);
+        }
+    </style>
+</head>
+<body>
+    <h1>Escolha Um País:</h1>
+    <select id="Select_Pais" class="form-select form-select-sm custom-select-border" aria-label="Default select example">
+    <div id="Paises_Dados">
+        <p>Nome: <span id="PaisNome"></span></p>
+        <p>Gentílico: <span id="PaisGentilico"></span></p>
+        <p>Sigla: <span id="PaisSigla"></span></p>
+        <p>Nome Internacional: <span id="PaisInternacional"></span></p>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function(){
+
+        const Select_Pais=document.getElementById("Select_Pais");
+        const Paises_Dados=document.getElementById("Paises_Dados");
+        const PaisNome=document.getElementById("PaisNome");
+        const PaisGentilico=document.getElementById("PaisGentilico");
+        const PaisSigla=document.getElementById("PaisSigla");
+        const PaisInternacional=document.getElementById("PaisInternacional");
+
+        fetch('paises.json')
+            .then(response => response.json()) 
+            .then(data => {
+                data.forEach(paises => {
+                    const option=document.createElement('option');
+                    option.value=paises.nome_pais; //?
+                    option.textContent=paises.nome_pais; //?
+                    Select_Pais.appendChild(option);
+                });
+
+                Select_Pais.addEventListener('change', function(){
+                    const Pais_Select=data.find(paises => paises.nome_pais===Select_Pais.value);
+
+                    if(Pais_Select){
+                        PaisNome.textContent=Pais_Select.nome_pais;
+                        PaisGentilico.textContent=Pais_Select.gentilico;
+                        PaisSigla.textContent=Pais_Select.sigla;
+                        PaisInternacional.textContent=Pais_Select.nome_pais_int;
+
+                        Paises_Dados.style.display="block";
+                    }
+
+                    else{
+                        Paises_Dados.style.display="none";
+                    }
+                });
+            });
+    });
+    </script>
+</body>
+</html>
