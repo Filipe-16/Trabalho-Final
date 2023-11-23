@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/ico" href="../img/IFRS.ico">
+    <title>Exercícios</title>
+    <style>
+        *{
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        h1{
+            font-size: xxx-large;
+        }
+
+        table{
+            display: flex;
+            justify-content: center;
+        }
+
+        button{
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><label for="Selecionar_Metadate">Escolha Um Metadado:</label></h1>
+        <select id="Selecionar_Metadate">
+            <option value="ANP_PGASOL">Produção</option>
+            <option value="ABATE_ABPEAV">Abate</option>
+            <option value="PPM_OVOS">Ovos</option>
+        </select>
+        <button onclick="consultarDados()">Confirmar</button>
+        <div id="Container_Dados"></div>
+    </div>
+    <script>
+        async function consultarDados(){
+            const Selecionar=document.getElementById("Selecionar_Metadate");
+            const Selecionar_Opções=Selecionar.value;
+            const apiEndpoint="http://www.ipeadata.gov.br/api/odata4/Metadados('" + Selecionar_Opções + "')";
+            const Container_Dados=document.getElementById("Container_Dados");
+  
+            Container_Dados.innerHTML="";
+  
+            try{
+                const response=await fetch(apiEndpoint);
+                const data=await response.json();
+                const serNome=data.value[0].SERNOME;
+                const serComentario=data.value[0].SERCOMENTARIO;
+    
+                Container_Dados.innerHTML+="<p>Nome: '" + serNome + "'</p>";
+    
+                const responseDados=await fetch(" " + apiEndpoint + "/Valores/"); 
+                const dataDados=await responseDados.json();
+    
+                const tableHTML=generateTable(dataDados.value);
+    
+                Container_Dados.innerHTML+=tableHTML;
+            } 
+            catch(error){
+                console.error("Erro:", error);
+            }
+        }
+
+        function generateTable(data){
+            let tableHTML="<table><tr><th>Ano</th><th>Quantidade Produzida</th></tr>";
+    
+            data.forEach((item) => {
+                const ano=item.VALDATA.split("T")[0].split("-")[0];
+                const quantidade=item.VALVALOR!==null?item.VALVALOR:"Não computado";
+    
+                tableHTML+="<tr><td>'" + ano + "'</td><td>'" + quantidade + "'</td></tr>";
+            });
+            tableHTML+="</table>";
+    
+            return tableHTML;
+        }
+      </script>
+</body>
+</html>
