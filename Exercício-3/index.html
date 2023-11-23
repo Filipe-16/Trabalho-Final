@@ -53,8 +53,8 @@
     
                 Container_Dados.innerHTML+="<p>Nome: '" + serNome + "'</p>";
     
-                const responseDados=await fetch(" " + apiEndpoint + "/Valores/"); 
-                const dataDados=await responseDados.json();
+                const Dados_Responsivos=await fetch(" " + apiEndpoint + "/Valores/"); 
+                const dataDados=await Dados_Responsivos.json();
     
                 const tableHTML=generateTable(dataDados.value);
     
