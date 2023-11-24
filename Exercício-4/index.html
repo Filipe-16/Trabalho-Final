@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercício 4</title>
+    <style>
+        *{
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        h1{
+            font-size: xxx-large;
+        }
+
+        button{
+            background-color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Clique nos Botões Abaixo:</h1>
+    <div class="container">
+        <button onclick="fetchWithPromiseAny()">Comando Promise.any</button>
+        <button onclick="fetchWithPromiseRace()">Comando Promise.race</button>
+        <button onclick="fetchWithPromiseAll()">Comando Promise.all</button>
+        <div id="Resultado_Container"></div>
+    </div>
+    <script>
+        async function fetchWithPromiseAny(){
+            const Resultado_Container=document.getElementById('Resultado_Container');
+
+            Resultado_Container.innerHTML='';
+
+            const apiUrl1='https://parallelum.com.br/fipe/api/v1/carros/marcas';
+            const apiUrl2='https://parallelum.com.br/fipe/api/v1/carros/marcas/59/';
+            const apiUrl3='https://parallelum.com.br/fipe/api/v1/carros/marcas/59/modelos/5940/anos/';
+
+            try{
+                const result=await Promise.any([
+                    fetch(apiUrl1).then(response => response.json()),
+                    fetch(apiUrl2).then(response => response.json()),
+                    fetch(apiUrl3).then(response => response.json())
+                ]);
+
+                if(result.codigo){
+                    Resultado_Container.innerHTML="<p>Código: " + result.codigo + ", Nome: " + result.nome + "</p>";
+                } 
+                else if(result[0].codigo){
+                    for(let i=0;i<10;i++){
+                        Resultado_Container.innerHTML+="<p>Código: " + result[i].codigo + ", Nome: " + result[i].nome + "</p>";
+                    }
+                }
+            } 
+            catch(error){
+                Resultado_Container.textContent="Erro ao acessar API's (Promise.any): '" + error.message + "' ";
+            }
+        }
+
+        async function fetchWithPromiseRace(){
+            const Resultado_Container=document.getElementById('Resultado_Container');
+
+            Resultado_Container.innerHTML='';
+
+            const apiUrl1='https://parallelum.com.br/fipe/api/v1/carros/marcas';
+            const apiUrl2='https://parallelum.com.br/fipe/api/v1/carros/marcas/59/';
+            const apiUrl3='https://parallelum.com.br/fipe/api/v1/carros/marcas/59/modelos/5940/anos/';
+
+            try{
+                const result=await Promise.race([
+                    fetch(apiUrl1).then(response => response.json()),
+                    fetch(apiUrl2).then(response => response.json()),
+                    fetch(apiUrl3).then(response => response.json())
+                ]);
+
+                if(result.codigo){
+                    Resultado_Container.innerHTML="<p>Código: " + result.codigo + ", Nome: " + result.nome + "</p>";
+                } 
+                else if(result[0].codigo){
+                    for(let i=0;i<10;i++){
+                        Resultado_Container.innerHTML+="<p>Código: " + result[i].codigo + ", Nome: " + result[i].nome + "</p>";
+                    }
+                }
+            }
+            catch(error){
+                Resultado_Container.textContent="Erro ao acessar API's (Promise.race): '" + error.message + "' ";
+            }
+        }
+
+        async function fetchWithPromiseAll(){
+            const Resultado_Container=document.getElementById('Resultado_Container');
+
+            Resultado_Container.innerHTML='';
+
+            const apiUrl1='https://parallelum.com.br/fipe/api/v1/carros/marcas';
+            const apiUrl2='https://parallelum.com.br/fipe/api/v1/carros/marcas/59/';
+            const apiUrl3='https://parallelum.com.br/fipe/api/v1/carros/marcas/59/modelos/5940/anos/';
+
+            try{
+                const results=await Promise.all([
+                    fetch(apiUrl1).then(response => response.json()),
+                    fetch(apiUrl2).then(response => response.json()),
+                    fetch(apiUrl3).then(response => response.json())
+                ]);
+
+                results.forEach(result => {
+                    if(result[0] && result[0].codigo){
+                        for(let i=0;i<Math.min(result.length, 10);i++){
+                        Resultado_Container.innerHTML+="<p>Código: " + result[i].codigo + ", Nome: " + result[i].nome + "</p>";
+                        }
+                    }
+                });
+            } 
+            catch(error){
+                Resultado_Container.textContent="Erro ao acessar API's (Promise.all): '" + error.message + "' ";
+            }
+        }
+    </script>
+</body>
+</html>
