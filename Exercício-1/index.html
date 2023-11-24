@@ -10,6 +10,10 @@
             text-align: center;
             box-sizing: border-box;
         }
+
+        h1{
+            font-size: xxx-large;
+        }
     </style>
 </head>
 <body>
@@ -37,7 +41,7 @@
                 data.forEach(paises => {
                     const option=document.createElement('option');
                     option.value=paises.nome_pais;
-                    option.textContent=paises.nome_pais;
+                    option.textContent=paises.nome_pais; 
                     Select_Pais.appendChild(option);
                 });
 
@@ -52,7 +56,6 @@
 
                         Paises_Dados.style.display="block";
                     }
-
                     else{
                         Paises_Dados.style.display="none";
                     }
