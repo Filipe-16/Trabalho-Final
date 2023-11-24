@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -26,8 +27,10 @@
         <p>Nome Internacional: <span id="PaisInternacional"></span></p>
     </div>
     <script>
+        //Executado quando o Document Object Model é carregado
         document.addEventListener("DOMContentLoaded", function(){
 
+        //Obtém referências para elementos HTML através do ID
         const Select_Pais=document.getElementById("Select_Pais");
         const Paises_Dados=document.getElementById("Paises_Dados");
         const PaisNome=document.getElementById("PaisNome");
@@ -35,9 +38,14 @@
         const PaisSigla=document.getElementById("PaisSigla");
         const PaisInternacional=document.getElementById("PaisInternacional");
 
+        //Utiliza a função fetch para obter dados do arquivo JSON
         fetch('paises.json')
-            .then(response => response.json()) 
+
+            //Converte a resposta para o formato .JSON
+            .then(response => response.json())
             .then(data => {
+
+                //Itera os dados obtidos do JSON para preencher as opções do elemento "select"
                 data.forEach(paises => {
                     const option=document.createElement('option');
                     option.value=paises.nome_pais;
@@ -45,9 +53,13 @@
                     Select_Pais.appendChild(option);
                 });
 
+                //Adiciona um ouvinte de evento pro elemento select(Select_Pais)
                 Select_Pais.addEventListener('change', function(){
+
+                    //Obtem o País selecionado com base no valor do elemento select
                     const Pais_Select=data.find(paises => paises.nome_pais===Select_Pais.value);
 
+                    //Verifica se o País foi encontrado e exibe as informações correspondentes a ele
                     if(Pais_Select){
                         PaisNome.textContent=Pais_Select.nome_pais;
                         PaisGentilico.textContent=Pais_Select.gentilico;
@@ -57,6 +69,7 @@
                         Paises_Dados.style.display="block";
                     }
                     else{
+                        //Se o País não foi encontrado, são ocultadas as informações
                         Paises_Dados.style.display="none";
                     }
                 });
