@@ -40,20 +40,20 @@
         async function consultarDados(){
             const Selecionar=document.getElementById("Selecionar_Metadate");
             const Selecionar_Opções=Selecionar.value;
-            const apiEndpoint="http://www.ipeadata.gov.br/api/odata4/Metadados('" + Selecionar_Opções + "')";
+            const api="http://www.ipeadata.gov.br/api/odata4/Metadados('" + Selecionar_Opções + "')";
             const Container_Dados=document.getElementById("Container_Dados");
   
             Container_Dados.innerHTML="";
   
             try{
-                const response=await fetch(apiEndpoint);
+                const response=await fetch(api);
                 const data=await response.json();
                 const serNome=data.value[0].SERNOME;
                 const serComentario=data.value[0].SERCOMENTARIO;
     
-                Container_Dados.innerHTML+="<p>Nome: '" + serNome + "'</p>";
+                Container_Dados.innerHTML+="<p>Nome: " + serNome + "</p>";
     
-                const Dados_Responsivos=await fetch(" " + apiEndpoint + "/Valores/"); 
+                const Dados_Responsivos=await fetch(api + "/Valores/"); 
                 const dataDados=await Dados_Responsivos.json();
     
                 const tableHTML=generateTable(dataDados.value);
@@ -72,7 +72,7 @@
                 const ano=item.VALDATA.split("T")[0].split("-")[0];
                 const quantidade=item.VALVALOR!==null?item.VALVALOR:"Não computado";
     
-                tableHTML+="<tr><td>'" + ano + "'</td><td>'" + quantidade + "'</td></tr>";
+                tableHTML+="<tr><td>" + ano + "</td><td>" + quantidade + "</td></tr>";
             });
             tableHTML+="</table>";
     
