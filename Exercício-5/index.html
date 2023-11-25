@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/ico" href="../img/IFRS.ico">
+    <title>Exercício 5</title>
+    <style>
+        *{
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        body{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        h1{
+            font-size: xxx-large;
+        }
+
+        button{
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Clique Em Uma Opção Abaixo:</h1>
+    <div class="container">
+        <select id="selector">
+            <option value="planet1">Planeta 1</option>
+            <option value="planet2">Planeta 2</option>
+            <option value="planet3">Planeta 3</option>
+        </select><br><br>
+        <button id="confirmar">Confirmar</button>
+        <div id="detalhes"></div>
+    </div>
+<script>
+    document.addEventListener("DOMContentLoaded", async function(){
+        const planetUrls=[
+            "https://swapi.dev/api/planets/3/","https://swapi.dev/api/planets/1/","https://swapi.dev/api/planets/2/"
+        ];
+
+        async function fetchData(url){
+            const response=await fetch(url);
+            const data=await response.json();
+            return data;
+        }
+
+        const [planet1,planet2,planet3]=await Promise.all(planetUrls.map(fetchData));
+
+        document.getElementById("confirmar").addEventListener("click", mostrarDetalhesPlaneta);
+
+        function mostrarDetalhesPlaneta(){
+            const selector=document.getElementById("selector");
+            const selecionar_planeta=selector.value;
+            let selecionar_detalhes;
+
+            switch (selecionar_planeta){
+                case "planet1":
+                    selecionar_detalhes=planet1;
+                    break;
+                case "planet2":
+                    selecionar_detalhes=planet2;
+                    break;
+                case "planet3":
+                    selecionar_detalhes=planet3;
+                    break;
+                default:
+                    selecionar_detalhes={};
+            }
+
+            const filtar_planetas=[planet1,planet2,planet3].filter(planet => planet.population>0);
+            const população_total=[planet1,planet2,planet3].reduce((sum, planet) => sum + parseInt(planet.population),0);
+            const detalhesContainer=document.getElementById("detalhes");
+            
+            detalhesContainer.innerHTML="<p>Nome: " + selecionar_detalhes.name + "</p>";
+            detalhesContainer.innerHTML+="<p>População: " + selecionar_detalhes.population + "</p>";
+            detalhesContainer.innerHTML+="<p>Clima: " + selecionar_detalhes.climate + "</p>";
+        }
+    });
+</script>
+</body>
+</html>
